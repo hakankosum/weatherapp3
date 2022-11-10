@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:weather_icons/weather_icons.dart';
 
@@ -60,24 +61,24 @@ class _DetailsViewState extends State<DetailsView> {
                 style: TextStyle(color: Colors.white),
               ),
               SizedBox(height: 1.h),
-              Text(
+              const Text(
                 "Durum",
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 3.h),
-              Container(
-                width: 40.w,
+              SizedBox(
+                width: 50.w,
                 child: Row(
                   children: [
                     Text(
-                      "Güncelleme zamanı",
-                      style: TextStyle(color: Colors.white),
+                      "Güncelleme zamanı: 16:00",
+                      style: TextStyle(color: Colors.white,fontSize: 16),
                     ),
                     Icon(
                       Icons.refresh,
                       color: Colors.white,
-                      size: 14,
+                      size: 20,
                     )
                   ],
                 ),
@@ -86,9 +87,10 @@ class _DetailsViewState extends State<DetailsView> {
           ),
         ),
         SizedBox(
-          height: 3.h,
+          height: 2.h,
         ),
         Container(
+          
           padding: EdgeInsets.only(right: 5.w, left: 5.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,31 +151,141 @@ class _DetailsViewState extends State<DetailsView> {
                             height: 8.h,
                             width: 8.h,
                             child: CircularProgressIndicator(
+                              
                               backgroundColor: Colors.grey.withOpacity(.5),
                               color: Colors.green[600],
-                              value: .12,
+                              value: 0.12,
                             ),
                           ),
                         )
                       ],
                     ),
                   ),
-                  SizedBox(width: 5.w,),
+                  SizedBox(
+                    width: 5.w,
+                  ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("AQ - çok iyi",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
-                        Text("asdasdasdasjdkajdaksasdasdasdadjasdasdasdasjdkajdaksasdasdasdadj")
-                  
+                        Text("AQ - çok iyi",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14)),
+                        Text(
+                            "asdasdasdasjdkajdaksasdasdasdadjasdasdasdasjdkajdaksasdasdasdadj")
                       ],
                     ),
                   )
                 ]),
               ),
-              
             ],
           ),
+        ),
+        SizedBox(height: 3.h,),
+        Row(
+          children: [
+            SizedBox(
+              width: 45.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SvgPicture.asset(
+                    "assets/icons/humidty.svg",
+                    height: 5.h,
+                    width: 5.h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "%85",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Text("Humidty"),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Container(
+              width: 45.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SvgPicture.asset(
+                    "assets/icons/pressure.svg",
+                    height: 5.h,
+                    width: 5.h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "%85",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Text("Air Pressure"),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 5.h,),
+        Row(
+          children: [
+            SizedBox(
+              width: 45.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SvgPicture.asset(
+                    "assets/icons/wind.svg",
+                    height: 5.h,
+                    width: 5.h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "%85",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Text("Rüzgar"),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Container(
+              width: 45.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SvgPicture.asset(
+                    "assets/icons/mist.svg",
+                    height: 5.h,
+                    width: 5.h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "%85",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      Text("Mist"),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
