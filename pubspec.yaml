@@ -40,6 +40,8 @@ dependencies:
   google_fonts: ^3.0.1
   flutter_svg: ^1.1.6
   weather_icons: ^3.0.0
+  http: ^0.13.5
+  showcaseview: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'package:weatherapp/models/geocoding_model.dart';
+import 'package:weatherapp/services/geocoding_service.dart';
 
 class DetailsView extends StatefulWidget {
   const DetailsView({super.key});
@@ -31,9 +33,14 @@ class _DetailsViewState extends State<DetailsView> {
               SizedBox(height: 5.h),
               Row(
                 children: [
-                  Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.white,
+                  InkWell(
+                    onTap: () {
+                      GeocdoingService("Istanbul");
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                    ),
                   ),
                   Spacer(),
                   Text("Location",

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
                 Theme.of(context).textTheme,
               )),
               title: 'Material App',
-              home: Scaffold(body:  DetailsView()),
+              home: Scaffold(body:  HomeView()),
             ));
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'package:weatherapp/services/geocoding_service.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -12,6 +13,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  TextEditingController cityName = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +27,15 @@ class _HomeViewState extends State<HomeView> {
             children: [
               SizedBox(height: 5.h),
               TextField(
+                controller: cityName,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   prefixIcon: Icon(Icons.location_history),
-                  suffixIcon: Icon(Icons.search),
+                  suffixIcon: InkWell(
+                      onTap: () {
+                        GeocdoingService(cityName.text);
+                      },
+                      child: Icon(Icons.search)),
                   hintText: 'Location',
                 ),
               ),
@@ -200,7 +207,10 @@ class _HomeViewState extends State<HomeView> {
                           SizedBox(
                             width: 3.w,
                           ),
-                          Icon(Icons.arrow_forward_ios_sharp,size: 16,),
+                          Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            size: 16,
+                          ),
                           SizedBox(
                             width: 3.w,
                           ),
