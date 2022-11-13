@@ -7,6 +7,8 @@ import 'api_key.dart';
 
 
 Future<GeocodingModel> GeocdoingService(String cityName) async {
+  GeocodingModel x;
+  
   final response = await http.get(
   Uri.parse('https://api.api-ninjas.com/v1/geocoding?city='+cityName),
 
@@ -14,8 +16,12 @@ Future<GeocodingModel> GeocdoingService(String cityName) async {
     "X-Api-Key": geocoding_api_key,
   },
 );
-  print(response.body);
-  final responseJson = jsonDecode(response.body);
+  
+  final responseJson = jsonDecode(response.body)[0];
 
-  return GeocodingModel.fromJson(responseJson[0]);
+  x=GeocodingModel.fromJson(responseJson);
+  return x;
+  
+
+  
 }

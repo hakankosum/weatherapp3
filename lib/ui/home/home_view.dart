@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:weather_icons/weather_icons.dart';
 import 'package:weatherapp/services/geocoding_service.dart';
+import 'package:weatherapp/services/weather_service.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -33,7 +34,9 @@ class _HomeViewState extends State<HomeView> {
                   prefixIcon: Icon(Icons.location_history),
                   suffixIcon: InkWell(
                       onTap: () {
-                        GeocdoingService(cityName.text);
+                        WeatherService();
+                        
+                        
                       },
                       child: Icon(Icons.search)),
                   hintText: 'Location',
