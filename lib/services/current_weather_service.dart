@@ -1,20 +1,18 @@
 import 'package:http/http.dart' as http;
 import 'package:weatherapp/models/geocoding_model.dart';
-import 'package:weatherapp/models/weather_model.dart';
+import 'package:weatherapp/models/current_weather_model.dart';
 import 'dart:convert';
 
 import 'package:weatherapp/services/api_key.dart';
 import 'package:weatherapp/services/geocoding_service.dart';
 
-Future<WeatherModel> WeatherService() async {
-  WeatherModel data;
+Future<CurrentWeatherModel> CurrentWeatherService(String cityName) async {
+  CurrentWeatherModel data;
 
   GeocodingModel x;
 
-  x = await GeocdoingService("Istanbul");
-  print(x.name);
-  print(x.latitude);
-  print(x.longitude);
+  x = await GeocdoingService(cityName);
+ 
 
   
   
@@ -24,13 +22,14 @@ Future<WeatherModel> WeatherService() async {
         "&lon=" +
         x.longitude.toString() +
         "&appid=" +
-        weather_api_key),
+        weather_api_key+
+        "&units=metric"+"&lang=tr"),
   );
 
   final responseJson = jsonDecode(response.body);
   
-  data = WeatherModel.fromJson(responseJson);
-  print(data.main!.temp.toString());
+  data = CurrentWeatherModel.fromJson(responseJson);
+  
   
   
   return data;

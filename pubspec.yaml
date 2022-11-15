@@ -42,6 +42,8 @@ dependencies:
   weather_icons: ^3.0.0
   http: ^0.13.5
   showcaseview: ^2.0.0+1
+  provider: ^6.0.4
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

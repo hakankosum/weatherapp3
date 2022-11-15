@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:weather_icons/weather_icons.dart';
-import 'package:weatherapp/services/geocoding_service.dart';
-import 'package:weatherapp/services/weather_service.dart';
+import 'package:weatherapp/provider/weather_provider.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -15,6 +15,15 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   TextEditingController cityName = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
+    //CurrentWeatherService("Kocaeli");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,13 +41,20 @@ class _HomeViewState extends State<HomeView> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   prefixIcon: Icon(Icons.location_history),
-                  suffixIcon: InkWell(
-                      onTap: () {
-                        WeatherService();
-                        
-                        
-                      },
-                      child: Icon(Icons.search)),
+                  suffixIcon: Consumer(
+                    builder: (BuildContext context, WeatherProvider data,
+                        Widget? child) {
+                      return InkWell(
+                          onTap: () {
+                            data.getCurrentWeather(cityName.text);
+                            data.refreshDate();
+                            data.lastRefresh();
+
+                            ;
+                          },
+                          child: Icon(Icons.search));
+                    },
+                  ),
                   hintText: 'Location',
                 ),
               ),
@@ -58,48 +74,88 @@ class _HomeViewState extends State<HomeView> {
                         ])),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text("Tarih bilgileri"),
-                        Spacer(),
-                        Text("Saat")
-                      ],
+                    Consumer(
+                      builder: (BuildContext context, WeatherProvider data,
+                          Widget? child) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(data.dayMonthYear),
+                            const Spacer(),
+                            Text(data.hourMin),
+                          ],
+                        );
+                      },
                     ),
                     Row(
                       children: [
-                        Container(
-                          height: 10.h,
-                          width: 10.h,
-                          child: Icon(
-                            WeatherIcons.day_sunny_overcast,
-                            size: 44,
-                          ),
+                        Consumer(
+                          builder: (BuildContext context, WeatherProvider data,
+                              widget) {
+                            if (data.isLoading == true) {
+                              return Container(
+                                height: 10.h,
+                                width: 10.h,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            "http://openweathermap.org/img/wn/" +
+                                                data.currentWeather!.weather![0]
+                                                    .icon! +
+                                                "@2x.png"))),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("18 C", style: TextStyle(fontSize: 24)),
-                            Text(
-                              "Durum",
-                              style: TextStyle(fontSize: 32),
-                            )
-                          ],
+                        Consumer(
+                          builder: (BuildContext context, WeatherProvider data,
+                              Widget? child) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    data.isLoading
+                                        ? data.currentWeather!.main!.temp!
+                                            .toStringAsFixed(2)
+                                        : "",
+                                    style: TextStyle(fontSize: 24)),
+                                Text(
+                                  data.isLoading
+                                      ? data.currentWeather!.weather![0]
+                                          .description!
+                                          .toUpperCase()
+                                      : "",
+                                  style: TextStyle(fontSize: 16),
+                                )
+                              ],
+                            );
+                          },
                         )
                       ],
                     ),
                     Spacer(),
-                    Row(
-                      children: [
-                        Text(
-                          "Güncelleme zamanı 15.00",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Icon(
-                          Icons.refresh,
-                          size: 16,
-                        )
-                      ],
+                    Consumer(
+                      builder: (BuildContext context, WeatherProvider data,
+                          Widget? child) {
+                        return Row(
+                          children: [
+                            Text(
+                              "Güncelleme zamanı ",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              data.lastUpdate == null ? "" : data.lastUpdate!,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Icon(
+                              Icons.refresh,
+                              size: 16,
+                            )
+                          ],
+                        );
+                      },
                     )
                   ],
                 ),
