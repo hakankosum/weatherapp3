@@ -149,7 +149,7 @@ class Main {
     temp = json['temp'];
     feelsLike = double.parse(json['feels_like'].toString()) ;
     tempMin = json['temp_min'];
-    tempMax = json['temp_max'];
+    tempMax =double.parse(json['temp_max'].toString()) ;
     pressure = json['pressure'];
     humidity = json['humidity'];
     seaLevel = json['sea_level'];
@@ -178,7 +178,7 @@ class Wind {
   Wind({this.speed, this.deg, this.gust});
 
   Wind.fromJson(Map<String, dynamic> json) {
-    speed = json['speed'];
+    speed = double.parse(json['speed'].toString()) ;
     deg = json['deg'];
     gust = json['gust'];
   }

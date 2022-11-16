@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -20,7 +21,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
+
     //CurrentWeatherService("Kocaeli");
   }
 
@@ -47,6 +48,8 @@ class _HomeViewState extends State<HomeView> {
                       return InkWell(
                           onTap: () {
                             data.getCurrentWeather(cityName.text);
+                            data.getForecastWeather(cityName.text);
+                            data.getDailyWeather(cityName.text);
                             data.refreshDate();
                             data.lastRefresh();
 
@@ -92,7 +95,7 @@ class _HomeViewState extends State<HomeView> {
                         Consumer(
                           builder: (BuildContext context, WeatherProvider data,
                               widget) {
-                            if (data.isLoading == true) {
+                            if (data.isCurrentLoaded == true) {
                               return Container(
                                 height: 10.h,
                                 width: 10.h,
@@ -105,32 +108,34 @@ class _HomeViewState extends State<HomeView> {
                                                 "@2x.png"))),
                               );
                             } else {
-                              return Container();
+                              return Text("");
                             }
                           },
                         ),
                         Consumer(
                           builder: (BuildContext context, WeatherProvider data,
                               Widget? child) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    data.isLoading
-                                        ? data.currentWeather!.main!.temp!
-                                            .toStringAsFixed(2)
+                            if (data.currentWeather == null) {
+                              return Text("data");
+                            } else {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      data.currentWeather!.main!.temp!
+                                          .toStringAsFixed(2),
+                                      style: TextStyle(fontSize: 24)),
+                                  Text(
+                                    data.isCurrentLoaded
+                                        ? data.currentWeather!.weather![0]
+                                            .description!
+                                            .toUpperCase()
                                         : "",
-                                    style: TextStyle(fontSize: 24)),
-                                Text(
-                                  data.isLoading
-                                      ? data.currentWeather!.weather![0]
-                                          .description!
-                                          .toUpperCase()
-                                      : "",
-                                  style: TextStyle(fontSize: 16),
-                                )
-                              ],
-                            );
+                                    style: TextStyle(fontSize: 16),
+                                  )
+                                ],
+                              );
+                            }
                           },
                         )
                       ],
@@ -175,7 +180,7 @@ class _HomeViewState extends State<HomeView> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount: 10,
+                    itemCount: 4,
                     itemBuilder: (context, index) {
                       return Container(
                         margin: EdgeInsets.only(right: 1.h),
@@ -183,13 +188,41 @@ class _HomeViewState extends State<HomeView> {
                         width: 10.h,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(Icons.sunny),
-                            Text("20 C"),
-                            Text("16:00")
-                          ],
+                        child: Consumer(
+                          builder: (BuildContext context, WeatherProvider data,
+                              widget) {
+                            return data.isForecastLoaded == false
+                                ? CircularProgressIndicator(
+                                    color: Colors.black,
+                                  )
+                                : Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        height: 5.h,
+                                        width: 5.h,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    "http://openweathermap.org/img/wn/" +
+                                                        data
+                                                            .forecastWeather!
+                                                            .liste![index]
+                                                            .weather![0]
+                                                            .icon! +
+                                                        "@2x.png"))),
+                                      ),
+                                      Text(data.forecastWeather!.liste![index]
+                                          .main!.temp!
+                                          .toStringAsFixed(2)),
+                                      Text(data
+                                          .forecastWeather!.liste![index].dtTxt
+                                          .toString()
+                                          .substring(10, 16))
+                                    ],
+                                  );
+                          },
                         ),
                       );
                     },
@@ -225,59 +258,71 @@ class _HomeViewState extends State<HomeView> {
                   ],
                 ),
               ),
-              Container(
-                height: 60.h,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 2.h),
-                      height: 10.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Color(0xffD2DFFF)),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 3.w),
-                          CircleAvatar(
-                            backgroundColor: Color(0xff9AB6FF),
-                            radius: 20,
-                            child: Container(
-                                margin: EdgeInsets.only(bottom: 1.5.h),
-                                child: Icon(
-                                  WeatherIcons.day_sunny_overcast,
-                                  color: Colors.black,
-                                )),
+              Consumer(
+                builder: (BuildContext context, WeatherProvider value,
+                    Widget? child) {
+                   return value.isDailyLoaded==true
+                      ? SizedBox(
+                          height: 60.h,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: value.dailyWeather!.dataList!.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 2.h),
+                                height: 10.h,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Color(0xffD2DFFF)),
+                                child: Row(
+                                  children: [
+                                    SizedBox(width: 3.w),
+                                    CircleAvatar(
+                                      backgroundColor: Color(0xff9AB6FF),
+                                      radius: 20,
+                                      child: Container(
+                                          margin:
+                                              EdgeInsets.only(bottom: 1.5.h),
+                                          decoration: BoxDecoration(image: DecorationImage(image: NetworkImage("http://openweathermap.org/img/wn/" +
+                                                        value.dailyWeather!.dataList![index].weather![0].icon!+
+                                                        "@2x.png"))),
+                                    )),
+                                    SizedBox(width: 5.w),
+                                    SizedBox(
+                                      height: 5.h,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(value.weekDays[(DateTime.now().weekday+index-1)%7]),
+                                          Text("Fırtına")
+                                        ],
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text("20 C"),
+                                    SizedBox(
+                                      width: 3.w,
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios_sharp,
+                                      size: 16,
+                                    ),
+                                    SizedBox(
+                                      width: 3.w,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                          SizedBox(width: 5.w),
-                          SizedBox(
-                            height: 5.h,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [Text("Salı"), Text("Fırtına")],
-                            ),
-                          ),
-                          Spacer(),
-                          Text("20 C"),
-                          SizedBox(
-                            width: 3.w,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_sharp,
-                            size: 16,
-                          ),
-                          SizedBox(
-                            width: 3.w,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        )
+                      : Text("data");
+                },
               )
             ],
           ),
