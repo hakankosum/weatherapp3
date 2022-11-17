@@ -195,7 +195,7 @@ class Temp {
     min = json['min'];
     max = json['max'];
     night = json['night'];
-    eve = json['eve'];
+    eve =double.parse(json['eve'].toString()) ;
     morn = json['morn'];
   }
 
@@ -223,7 +223,7 @@ class FeelsLike {
     day = json['day'];
     night = json['night'];
     eve = json['eve'];
-    morn = json['morn'];
+    morn =double.parse(json['morn'].toString()) ;
   }
 
   Map<String, dynamic> toJson() {
@@ -247,7 +247,7 @@ class Weather {
   Weather.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     main = json['main'];
-    description = json['description'];
+    description = json['description'].toString().replaceFirst(json['description'].toString()[0], json['description'].toString()[0].toUpperCase());
     icon = json['icon'];
   }
 

@@ -24,7 +24,7 @@ class WeatherProvider extends ChangeNotifier {
   String hourMin = DateFormat('h:mm a').format(DateTime.now());
   String? lastUpdate;
 
-  List<String> weekDays =["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  List<String> weekDays =["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
 
 
 

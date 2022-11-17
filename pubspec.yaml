@@ -44,6 +44,7 @@ dependencies:
   showcaseview: ^2.0.0+1
   provider: ^6.0.4
   intl: ^0.17.0
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:

@@ -21,6 +21,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    
 
     //CurrentWeatherService("Kocaeli");
   }
@@ -116,14 +117,14 @@ class _HomeViewState extends State<HomeView> {
                           builder: (BuildContext context, WeatherProvider data,
                               Widget? child) {
                             if (data.currentWeather == null) {
-                              return Text("data");
+                              return Text("");
                             } else {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                       data.currentWeather!.main!.temp!
-                                          .toStringAsFixed(2),
+                                          .toStringAsFixed(1)+" °C",
                                       style: TextStyle(fontSize: 24)),
                                   Text(
                                     data.isCurrentLoaded
@@ -192,9 +193,7 @@ class _HomeViewState extends State<HomeView> {
                           builder: (BuildContext context, WeatherProvider data,
                               widget) {
                             return data.isForecastLoaded == false
-                                ? CircularProgressIndicator(
-                                    color: Colors.black,
-                                  )
+                                ? Container()
                                 : Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -203,6 +202,8 @@ class _HomeViewState extends State<HomeView> {
                                         height: 5.h,
                                         width: 5.h,
                                         decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: Colors.red.withOpacity(0.3),
                                             image: DecorationImage(
                                                 image: NetworkImage(
                                                     "http://openweathermap.org/img/wn/" +
@@ -215,7 +216,7 @@ class _HomeViewState extends State<HomeView> {
                                       ),
                                       Text(data.forecastWeather!.liste![index]
                                           .main!.temp!
-                                          .toStringAsFixed(2)),
+                                          .toStringAsFixed(1)+" °C"),
                                       Text(data
                                           .forecastWeather!.liste![index].dtTxt
                                           .toString()
@@ -261,7 +262,7 @@ class _HomeViewState extends State<HomeView> {
               Consumer(
                 builder: (BuildContext context, WeatherProvider value,
                     Widget? child) {
-                   return value.isDailyLoaded==true
+                  return value.isDailyLoaded == true
                       ? SizedBox(
                           height: 60.h,
                           child: ListView.builder(
@@ -280,15 +281,21 @@ class _HomeViewState extends State<HomeView> {
                                   children: [
                                     SizedBox(width: 3.w),
                                     CircleAvatar(
-                                      backgroundColor: Color(0xff9AB6FF),
-                                      radius: 20,
-                                      child: Container(
-                                          margin:
-                                              EdgeInsets.only(bottom: 1.5.h),
-                                          decoration: BoxDecoration(image: DecorationImage(image: NetworkImage("http://openweathermap.org/img/wn/" +
-                                                        value.dailyWeather!.dataList![index].weather![0].icon!+
-                                                        "@2x.png"))),
-                                    )),
+                                        backgroundColor: Color(0xff9AB6FF),
+                                        radius: 20,
+                                        child: Container(
+                                          
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      "http://openweathermap.org/img/wn/" +
+                                                          value
+                                                              .dailyWeather!
+                                                              .dataList![index]
+                                                              .weather![0]
+                                                              .icon! +
+                                                          "@2x.png"))),
+                                        )),
                                     SizedBox(width: 5.w),
                                     SizedBox(
                                       height: 5.h,
@@ -298,13 +305,17 @@ class _HomeViewState extends State<HomeView> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(value.weekDays[(DateTime.now().weekday+index-1)%7]),
-                                          Text("Fırtına")
+                                          Text(value.weekDays[
+                                              (DateTime.now().weekday +
+                                                      index -
+                                                      1) %
+                                                  7]),
+                                          Text(value.dailyWeather!.dataList![index].weather![0].description!)
                                         ],
                                       ),
                                     ),
-                                    Spacer(),
-                                    Text("20 C"),
+                                    const Spacer(),
+                                    Text(value.dailyWeather!.dataList![index].temp!.day!.toStringAsFixed(1)+" °C"),
                                     SizedBox(
                                       width: 3.w,
                                     ),
@@ -321,7 +332,7 @@ class _HomeViewState extends State<HomeView> {
                             },
                           ),
                         )
-                      : Text("data");
+                      : Text("");
                 },
               )
             ],
