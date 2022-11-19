@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -14,44 +16,62 @@ class WeatherProvider extends ChangeNotifier {
   bool isForecastLoaded = false;
   bool isDailyLoaded = false;
 
-  CurrentWeatherModel? currentWeather;
-  ForecastWeatherModel? forecastWeather;
-  DailyWeatherModel? dailyWeather;
+  // ignore: prefer_typing_uninitialized_variables
+  var currentWeather;
+  var forecastWeather;
+  var dailyWeather;
 
   String dayMonthYear = DateFormat('EEEE, d MMM, yyyy').format(DateTime.now());
   String currentDayName = DateFormat('EEEE').format(DateTime.now());
-  
+
   String hourMin = DateFormat('h:mm a').format(DateTime.now());
   String? lastUpdate;
 
-  List<String> weekDays =["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
-
-
+  List<String> weekDays = [
+    "Pazartesi",
+    "Salı",
+    "Çarşamba",
+    "Perşembe",
+    "Cuma",
+    "Cumartesi",
+    "Pazar"
+  ];
 
   getCurrentWeather(String context) async {
     isCurrentLoaded = false;
     currentWeather = await CurrentWeatherService(context);
+    if (currentWeather.runtimeType == CurrentWeatherModel) {
+      isCurrentLoaded = true;
+    }
+    else{
+      print("current service has " +currentWeather.runtimeType.toString());
+    }
 
-    isCurrentLoaded = true;
     notifyListeners();
-    print(DateTime.now().weekday);
-
   }
 
   getForecastWeather(String context) async {
     isForecastLoaded = false;
     forecastWeather = await ForecastWeatherService(context);
-    isForecastLoaded = true;
-
+    if (forecastWeather.runtimeType == ForecastWeatherModel) {
+      isForecastLoaded = true;
+    }
+    else{
+      print("forecast service has "+forecastWeather.runtimeType.toString());
+    }
 
     notifyListeners();
   }
 
-  getDailyWeather(String context) async{
+  getDailyWeather(String context) async {
     isDailyLoaded = false;
     dailyWeather = await DailyWeatherService(context);
-    isDailyLoaded = true;
-
+    if (dailyWeather.runtimeType == DailyWeatherModel) {
+      isDailyLoaded = true;
+    }
+    else{
+      print("daily service has "+dailyWeather.runtimeType.toString());
+    }
   }
 
   refreshDate() {

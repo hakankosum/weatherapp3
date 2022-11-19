@@ -1,10 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:weather_icons/weather_icons.dart';
 import 'package:weatherapp/provider/weather_provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -21,7 +20,6 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
 
     //CurrentWeatherService("Kocaeli");
   }
@@ -53,8 +51,19 @@ class _HomeViewState extends State<HomeView> {
                             data.getDailyWeather(cityName.text);
                             data.refreshDate();
                             data.lastRefresh();
-
-                            ;
+                            if (data.currentWeather.runtimeType == DioError ||
+                                data.forecastWeather.runtimeType == DioError ||
+                                data.dailyWeather.runtimeType == DioError) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Column(
+                                  children: [
+                                    Text(data.currentWeather.runtimeType==DioError? "curr"+data.currentWeather.message:""),
+                                    Text(data.forecastWeather.runtimeType==DioError? "fore"+data.currentWeather.message:""),
+                                    Text(data.dailyWeather.runtimeType==DioError? "daily"+data.currentWeather.message:""),
+                                  ],
+                                ))
+                              );
+                            }
                           },
                           child: Icon(Icons.search));
                     },
@@ -116,15 +125,16 @@ class _HomeViewState extends State<HomeView> {
                         Consumer(
                           builder: (BuildContext context, WeatherProvider data,
                               Widget? child) {
-                            if (data.currentWeather == null) {
-                              return Text("");
+                            if (data.isCurrentLoaded == false) {
+                              return const Text("");
                             } else {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                       data.currentWeather!.main!.temp!
-                                          .toStringAsFixed(1)+" °C",
+                                              .toStringAsFixed(1) +
+                                          " °C",
                                       style: TextStyle(fontSize: 24)),
                                   Text(
                                     data.isCurrentLoaded
@@ -202,8 +212,9 @@ class _HomeViewState extends State<HomeView> {
                                         height: 5.h,
                                         width: 5.h,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          color: Colors.red.withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.red.withOpacity(0.3),
                                             image: DecorationImage(
                                                 image: NetworkImage(
                                                     "http://openweathermap.org/img/wn/" +
@@ -215,8 +226,9 @@ class _HomeViewState extends State<HomeView> {
                                                         "@2x.png"))),
                                       ),
                                       Text(data.forecastWeather!.liste![index]
-                                          .main!.temp!
-                                          .toStringAsFixed(1)+" °C"),
+                                              .main!.temp!
+                                              .toStringAsFixed(1) +
+                                          " °C"),
                                       Text(data
                                           .forecastWeather!.liste![index].dtTxt
                                           .toString()
@@ -282,9 +294,9 @@ class _HomeViewState extends State<HomeView> {
                                     SizedBox(width: 3.w),
                                     CircleAvatar(
                                         backgroundColor: Color(0xff9AB6FF),
+                                         
                                         radius: 20,
                                         child: Container(
-                                          
                                           decoration: BoxDecoration(
                                               image: DecorationImage(
                                                   image: NetworkImage(
@@ -310,12 +322,19 @@ class _HomeViewState extends State<HomeView> {
                                                       index -
                                                       1) %
                                                   7]),
-                                          Text(value.dailyWeather!.dataList![index].weather![0].description!)
+                                          Text(value
+                                              .dailyWeather!
+                                              .dataList![index]
+                                              .weather![0]
+                                              .description!)
                                         ],
                                       ),
                                     ),
                                     const Spacer(),
-                                    Text(value.dailyWeather!.dataList![index].temp!.day!.toStringAsFixed(1)+" °C"),
+                                    Text(value.dailyWeather!.dataList![index]
+                                            .temp!.day!
+                                            .toStringAsFixed(1) +
+                                        " °C"),
                                     SizedBox(
                                       width: 3.w,
                                     ),
