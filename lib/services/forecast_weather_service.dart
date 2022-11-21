@@ -9,7 +9,7 @@ import 'package:weatherapp/services/geocoding_service.dart';
 Future<dynamic> ForecastWeatherService(String cityName) async {
   ForecastWeatherModel data;
 
-  GeocodingModel x;
+  var x;
 
   x = await GeocdoingService(cityName);
  

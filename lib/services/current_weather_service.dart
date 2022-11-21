@@ -8,9 +8,9 @@ import 'package:weatherapp/services/api_key.dart';
 import 'package:weatherapp/services/geocoding_service.dart';
 
 Future<dynamic> CurrentWeatherService(String cityName) async {
-  CurrentWeatherModel data;
+  var data;
 
-  GeocodingModel x;
+  var x;
 
   x = await GeocdoingService(cityName);
 

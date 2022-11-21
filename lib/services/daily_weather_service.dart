@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:dio/dio.dart';
 
 import 'package:weatherapp/models/geocoding_model.dart';
@@ -8,15 +10,15 @@ import 'package:weatherapp/services/geocoding_service.dart';
 import '../models/daily_weather_model.dart';
 
 Future<dynamic> DailyWeatherService(String cityName) async {
-  DailyWeatherModel data;
+  var data;
 
-  GeocodingModel x;
+  var x;
 
   x = await GeocdoingService(cityName);
 
   try {
     final response = await Dio().get(
-        "https://api.openweathermap.org/data/2.5/forecast/daily?/",
+        "https://api.openweathermap.org/data/2.5/forecast/daily?/asdasd/",
         queryParameters: {
           "lat": x.latitude.toString(),
           "lon": x.longitude,

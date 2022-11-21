@@ -70,7 +70,8 @@ class WeatherProvider extends ChangeNotifier {
       isDailyLoaded = true;
     }
     else{
-      print("daily service has "+dailyWeather.runtimeType.toString());
+      
+      
     }
   }
 

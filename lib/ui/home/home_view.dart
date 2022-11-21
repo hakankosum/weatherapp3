@@ -53,14 +53,18 @@ class _HomeViewState extends State<HomeView> {
                             data.lastRefresh();
                             if (data.currentWeather.runtimeType == DioError ||
                                 data.forecastWeather.runtimeType == DioError ||
-                                data.dailyWeather.runtimeType == DioError) {
+                                data.dailyWeather.runtimeType == DioError ||
+                                data.currentWeather.runtimeType ==Null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Column(
-                                  children: [
-                                    Text(data.currentWeather.runtimeType==DioError? "curr"+data.currentWeather.message:""),
-                                    Text(data.forecastWeather.runtimeType==DioError? "fore"+data.currentWeather.message:""),
-                                    Text(data.dailyWeather.runtimeType==DioError? "daily"+data.currentWeather.message:""),
-                                  ],
+                                SnackBar(content: Container(height: 10.h,
+                                  child: Column(
+                                    children: [
+                                      Text(data.currentWeather.runtimeType==DioError? "curr service has "+data.currentWeather.message:""),
+                                      Text(data.forecastWeather.runtimeType==DioError? "fore service has "+data.currentWeather.message:""),
+                                      Text(data.dailyWeather.runtimeType==DioError? "daily service has "+data.currentWeather.message:""),
+                                      Text(data.dailyWeather.runtimeType==Null? "Aranan yer bulunamadı!":""),
+                                    ],
+                                  ),
                                 ))
                               );
                             }
@@ -76,7 +80,7 @@ class _HomeViewState extends State<HomeView> {
                 height: 25.h,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                         begin: Alignment.bottomLeft,
                         end: Alignment.topRight,
                         colors: [
@@ -112,13 +116,13 @@ class _HomeViewState extends State<HomeView> {
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
                                         image: NetworkImage(
-                                            "http://openweathermap.org/img/wn/" +
+                                            // ignore: prefer_interpolation_to_compose_strings
+                                            "${"http://openweathermap.org/img/wn/" +
                                                 data.currentWeather!.weather![0]
-                                                    .icon! +
-                                                "@2x.png"))),
+                                                    .icon!}@2x.png"))),
                               );
                             } else {
-                              return Text("");
+                              return const Text("");
                             }
                           },
                         ),
