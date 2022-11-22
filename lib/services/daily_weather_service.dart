@@ -18,7 +18,7 @@ Future<dynamic> DailyWeatherService(String cityName) async {
 
   try {
     final response = await Dio().get(
-        "https://api.openweathermap.org/data/2.5/forecast/daily?/asdasd/",
+        "https://api.openweathermap.org/data/2.5/forecast/daily?/",
         queryParameters: {
           "lat": x.latitude.toString(),
           "lon": x.longitude,
